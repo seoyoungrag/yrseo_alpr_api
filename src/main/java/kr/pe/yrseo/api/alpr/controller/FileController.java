@@ -39,13 +39,17 @@ public class FileController {
     
     @PostMapping("/uploadFile")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
+    	logger.info("====================alpr start===============");
         String fileName = fileStorageService.storeFile(file);
+        logger.info("	fileName: "+fileName);
         String result = alprCallService.executeAlpr(fileName);
+        logger.info("	result: "+result);
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
                 .path(fileName)
                 .toUriString();
-
+        logger.info("	fileDownloadUri: "+fileDownloadUri);
+    	logger.info("====================alpr end===============");
         return new UploadFileResponse(fileName, fileDownloadUri,
                 file.getContentType(), file.getSize(), result);
     }

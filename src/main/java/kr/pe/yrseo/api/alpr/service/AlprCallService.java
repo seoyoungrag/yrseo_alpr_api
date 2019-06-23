@@ -7,15 +7,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import kr.pe.yrseo.api.alpr.controller.FileController;
 import kr.pe.yrseo.api.alpr.exception.FileStorageException;
 import kr.pe.yrseo.api.alpr.property.AlprProperties;
 import kr.pe.yrseo.api.alpr.property.FileStorageProperties;
 
 @Service
 public class AlprCallService {
+    private static final Logger logger = LoggerFactory.getLogger(AlprCallService.class);
 
     private final Path alprLocation;
     private final Path fileStorageLocation;
@@ -37,6 +41,7 @@ public class AlprCallService {
     public String executeAlpr(String fileNm) {
     	ProcessBuilder processBuilder = new ProcessBuilder();
         Path targetLocation = this.fileStorageLocation.resolve(fileNm);
+        logger.info("	command: "+alprLocation+" -c kr "+targetLocation);
     	processBuilder.command("bash", "-c", alprLocation+" -c kr "+targetLocation);
 
     	try {
